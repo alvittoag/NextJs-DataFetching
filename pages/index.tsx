@@ -17,7 +17,7 @@ const HomePage = ({ products }: Props) => {
   return (
     <ul>
       {products.map((product) => (
-        <Link key={product.id} href={`/${product.id}`}>
+        <Link key={product.id} href={`/products/${product.id}`}>
           <li>{product.title}</li>
         </Link>
       ))}
@@ -26,7 +26,6 @@ const HomePage = ({ products }: Props) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  console.log("(Re-) Generating");
   const filePath = path.join(process.cwd(), "data", "dummy-backend.json");
   const jsonData = await fs.readFile(filePath);
   const data = JSON.parse(jsonData.toString());

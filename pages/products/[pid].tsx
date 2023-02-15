@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import fs from "fs/promises";
 import path from "path";
-import { Products } from ".";
+import { Products } from "..";
 
 type ProductId = {
   pid: string;
