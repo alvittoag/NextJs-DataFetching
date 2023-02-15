@@ -1,3 +1,4 @@
+import { GetStaticProps } from "next";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 type Posts = {
@@ -6,37 +7,27 @@ type Posts = {
   title: string;
 };
 
-const LastSalePage = () => {
-  // const [posts, setPosts] = useState<Posts[] | null>(null);
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
+type Props = {
+  posts: Posts[];
+};
 
+const LastSalePage = ({ posts }: Props) => {
+  const [dataPosts, setDataPosts] = useState(posts);
   const url = "https://jsonplaceholder.typicode.com/posts";
   const fetcher = () => fetch(url).then((res) => res.json());
   const { data, isLoading } = useSWR(url, fetcher);
 
-  // useEffect(() => {
-  //   getData();
-  //   setIsLoading(true);
-  // }, []);
-
-  // const getData = async () => {
-  //   const url = "https://jsonplaceholder.typicode.com/posts";
-  //   const res = await fetch(url);
-  //   const data = await res.json();
-
-  //   setIsLoading(false);
-  //   setPosts(data);
-  //   return data;
-  // };
+  useEffect(() => {
+    setDataPosts(data);
+  }, [data]);
 
   if (isLoading) return <p>Loading...</p>;
 
   return (
     <div>
-      {data?.map((post: Posts) => (
+      {dataPosts?.map((post) => (
         <div key={post.id}>
           <p>{post.title}</p>
-          <p>{post.body}</p>
         </div>
       ))}
     </div>
@@ -44,3 +35,11 @@ const LastSalePage = () => {
 };
 
 export default LastSalePage;
+
+export const getStaticProps: GetStaticProps = async () => {
+  const url = "https://jsonplaceholder.typicode.com/posts";
+  const res = await fetch(url);
+  const data = await res.json();
+
+  return { props: { posts: data }, revalidate: 10 };
+};
